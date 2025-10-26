@@ -1,1 +1,11 @@
 .venv/
+
+venv313/
+
+.env
+
+__pycache__/
+
+*.db
+*.sqlite
+*sqlite3
