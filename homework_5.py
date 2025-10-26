@@ -4,7 +4,7 @@ class Distance:
 
     def __init__(self, value, unit):
         if unit not in self._to_meters:
-            raise ValueError("Unsopported unit! Use "cm", "m", or "km".")
+            raise ValueError("Unsopported unit! Use cm", "m" or "km")
             self.value = value
             self.unit = unit
 
