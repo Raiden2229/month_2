@@ -1,31 +1,47 @@
 class Distance:
-    def __init__(self, value: float, unit: str):
-        self.value = value
-        self.unit = unit
+
+    _to_meters = {"cm": 0.01, "m": 1, "km": 1000}
+
+    def __init__(self, value, unit):
+        if unit not in self._to_meters:
+            raise ValueError("Unsopported unit! Use "cm", "m", or "km".")
+            self.value = value
+            self.unit = unit
 
     def __str__(self):
-        return f"value = {self.value}; \nunit = {self.unit}"
+        return f"{self.value} {self.unit}"
 
-    def __add__(self, obj):
-        try:
-            if self.unit == obj.unit:
-                new_obj = Distance(value = self.value + obj.value, unit = self.unit)
-                return new_obj
-            else:
-                return "у атрибутов должна быть еденица измерения"
-        except AttributeError:
-            return "Проверьте что оба атрибута являются обьектами на основекласса Money"
-        except:
-            return "Произошла ошибка, проверьте вводимые данные"
+    def to_meters(self):
+        return self.value * self._to_meters[self.unit]
 
-    def __sub__(self, obj):
-        try:
-            if self.unit == obj.unit:
-                new_obj = Distance(value = self.value - obj.value, unit = self.unit)
-                if new_obj.value < 0 :
-                    raise ValueError ("Расстояние не может быть отрицательным")
-                return new_obj
-            else:
-                return
+    @staticmethod
+    def from_meters_to_km(meters, unit):
+        return meters/Distance._to_meters[unit]
+
+    def __add__(self, other):
+        if not isinstance(other, Distance):
+            raise TypeError("Можно вычитать только обьекты Distance")
+
+        result_meters = self.to_meters() - other.to_meters()
+
+        if result_meters < 0:
+            raise ValueError("Результат не может быть отрицательным расстоянием")
+
+        new_value = self.from_meters_to_km(result_meters, self.unit)
+        return Distance(new_value, self.unit)
+
+    def __eq__(self, other):
+        return self.to_meters() == other.to_meters()
+    def __lt__(self, other):
+        return self.to_meters() < other.to_meters()
+    def __le__(self, other):
+        return self.to_meters() <= other.to_meters()
+    def __gt__(self, other):
+        return self.to_meters() > other.to_meters()
+    def __ge__(self, other):
+        return self.to_meters() >= other.to_meters()
+
+
+
 
 
